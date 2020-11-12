@@ -16,9 +16,13 @@ namespace Hesolvis_Aufgabe
 {
     public partial class MainWindow : Form
     {
+                
+        private static readonly CultureInfo cultureInfo  = CultureInfo.GetCultureInfo("de-DE");
 
-        
+        private static char[] headerDelimiter = {'\t'};
+        private static string rowDelimiter = "\t\r\n";
 
+        // Initialize
         public MainWindow()
         {
             InitializeComponent();
@@ -26,6 +30,9 @@ namespace Hesolvis_Aufgabe
             lbl_betraghaben.Text = "";
         }
 
+        //***********************************************************************************************
+
+        // Function to count Line numbers in the excel file
         static long CountLinesInFile(string f)
         {
             long count = 0;
@@ -41,81 +48,108 @@ namespace Hesolvis_Aufgabe
         }
 
 
+
+        //***********************************************************************************************
+
+
+        // Function to load CSV Data
         private void LoadData(string strFilePath)
         {
-
-            StreamReader sr = new StreamReader(strFilePath);
-
-            long count = CountLinesInFile(strFilePath);
-            MessageBox.Show("Anzahl CSV Datei Gesamtzeilen: " + count.ToString());
-
-            string line = sr.ReadLine();
-            string[] value = line.Split('\t');
             DataTable dt = new DataTable();
-            DataRow row;
-            foreach (string dc in value)
+            try
             {
-                dt.Columns.Add(new DataColumn(dc.Trim('\t')));
 
-            }
+                // Create stream reader
+                StreamReader sr = new StreamReader(strFilePath);
 
-            while (!sr.EndOfStream)
-            {
-                value = sr.ReadLine().Split("\t\r\n".ToCharArray());
-                if (value.Length == dt.Columns.Count)
-                {
-                    row = dt.NewRow();
-                    row.ItemArray = value;
-                    dt.Rows.Add(row);
+                long count = CountLinesInFile(strFilePath);
+                MessageBox.Show("Anzahl CSV Datei Gesamtzeilen: " + count.ToString());
 
-                }
-                else
-                {
-                    MessageBox.Show("Error in Row " + "\n" + "\n" + sr.ReadLine());
-                }
-
+                string line = sr.ReadLine();
+                string[] value = line.Split('\t');
                 
+                DataRow row;
+                foreach (string dc in value)
+                {
+                    dt.Columns.Add(new DataColumn(dc.Trim(headerDelimiter)));
+                }
 
+                while (!sr.EndOfStream)
+                {
+                    value = sr.ReadLine().Split(rowDelimiter.ToCharArray());
+                
+                    // Add only those rows where column count matches with row count in the csv file
+                    if (value.Length == dt.Columns.Count)
+                    {
+                        row = dt.NewRow();
+                        row.ItemArray = value;
+                        dt.Rows.Add(row);
+                    }
+                    else
+                    {
+                       // Show error that the row count is not matching with column
+                       MessageBox.Show("Error in Row " + "\n" + "\n" + sr.ReadLine());
+                    }
+
+                }
             }
+
+            catch (System.IndexOutOfRangeException ex)
+            {
+                System.ArgumentException argEx = new System.ArgumentException("Index is out of range", "index", ex);
+                throw argEx;
+            }
+
+
+            // Set the datagrid source as the data-table dt
 
             dataGridView1.DataSource = dt;
-            dataGridView1.Columns["Betrag Soll"].DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("de-DE");
+            dataGridView1.Columns["Betrag Soll"].DefaultCellStyle.FormatProvider = cultureInfo;
             dataGridView1.Columns["Betrag Soll"].DefaultCellStyle.Format = String.Format("c");
           
             double resultValueHaben = 0;
             double resultValueSoll = 0;
 
-            CultureInfo culture = new CultureInfo("de-DE");
+            // CALCULATION PART FOR BETRAG SOLL AND BETRAG HABEN
 
-
-            for (int i = 0; i < dataGridView1.Rows.Count- 1; ++i)
+            try
             {
-                if (dataGridView1.Rows[i].Cells[15].Value.ToString() != "") 
-                
+                for (int i = 0; i < dataGridView1.Rows.Count- 1; ++i)
                 {
-                    string betragSollData = (string)dataGridView1.Rows[i].Cells[15].FormattedValue.ToString();
-                    resultValueSoll += double.Parse(betragSollData, CultureInfo.GetCultureInfo("de"));
+                    if (dataGridView1.Rows[i].Cells[15].Value.ToString() != "") 
+                
+                    {
+                        string betragSollData = (string)dataGridView1.Rows[i].Cells[15].FormattedValue.ToString();
+                        resultValueSoll += double.Parse(betragSollData, cultureInfo);
+                    }
+
+                    if (dataGridView1.Rows[i].Cells[16].Value.ToString() != "")
+                
+                    {                 
+                        string betragHabenData = (string)dataGridView1.Rows[i].Cells[16].FormattedValue.ToString();
+                        resultValueHaben += double.Parse(betragHabenData, cultureInfo);
+                    }
 
                 }
+                    // Display the summed results in label.
 
-                if (dataGridView1.Rows[i].Cells[16].Value.ToString() != "")
-                
-                {
-                 
-                    string betragHabenData = (string)dataGridView1.Rows[i].Cells[16].FormattedValue.ToString();
-                    resultValueHaben += double.Parse(betragHabenData, CultureInfo.GetCultureInfo("de"));
-
-                }
-
+                    lbl_betragSoll.Text = ((char)0x20AC).ToString() + resultValueSoll.ToString(cultureInfo);
+                    lbl_betraghaben.Text = ((char)0x20AC).ToString() + resultValueHaben.ToString(cultureInfo);
             }
 
-            lbl_betragSoll.Text = resultValueSoll.ToString(culture);
-
-            lbl_betraghaben.Text = resultValueHaben.ToString(culture);
-
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An unexpected error occured! "+ ex.Message);
+                
+            }
 
         }
 
+
+        //***********************************************************************************************
+
+
+        // Function to import csv file on Button click
         private void btn_ImportCSV_Click(object sender, EventArgs e)
         {
             try
@@ -137,18 +171,31 @@ namespace Hesolvis_Aufgabe
                     else
                     {
                         MessageBox.Show("No File Chosen!");
-
                     }
                     
                 }
-                
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
-                
+                System.ArgumentException argEx = new System.ArgumentException("Not valid CSV file, please re-check!", "index", ex);
+                throw argEx;
+
             }
         }
+
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                LoadData(txtFileName.Text);
+                e.Handled = true;
+            }
+        }
+
+
+        //***********************************************************************************************
+
     }
 }

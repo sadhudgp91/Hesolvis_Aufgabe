@@ -38,6 +38,7 @@ namespace Hesolvis_Aufgabe
             this.label3 = new System.Windows.Forms.Label();
             this.lbl_betragSoll = new System.Windows.Forms.Label();
             this.lbl_betraghaben = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,7 +48,7 @@ namespace Hesolvis_Aufgabe
             this.btn_ImportCSV.Name = "btn_ImportCSV";
             this.btn_ImportCSV.Size = new System.Drawing.Size(138, 41);
             this.btn_ImportCSV.TabIndex = 0;
-            this.btn_ImportCSV.Text = "CSV Importieren";
+            this.btn_ImportCSV.Text = "CSV datei importieren";
             this.btn_ImportCSV.UseVisualStyleBackColor = true;
             this.btn_ImportCSV.Click += new System.EventHandler(this.btn_ImportCSV_Click);
             // 
@@ -55,7 +56,7 @@ namespace Hesolvis_Aufgabe
             // 
             this.txtFileName.Location = new System.Drawing.Point(215, 58);
             this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(1112, 20);
+            this.txtFileName.Size = new System.Drawing.Size(510, 20);
             this.txtFileName.TabIndex = 1;
             // 
             // dataGridView1
@@ -108,6 +109,7 @@ namespace Hesolvis_Aufgabe
             // 
             this.lbl_betragSoll.AutoSize = true;
             this.lbl_betragSoll.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_betragSoll.ForeColor = System.Drawing.Color.DodgerBlue;
             this.lbl_betragSoll.Location = new System.Drawing.Point(231, 502);
             this.lbl_betragSoll.Name = "lbl_betragSoll";
             this.lbl_betragSoll.Size = new System.Drawing.Size(103, 20);
@@ -118,17 +120,31 @@ namespace Hesolvis_Aufgabe
             // 
             this.lbl_betraghaben.AutoSize = true;
             this.lbl_betraghaben.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_betraghaben.ForeColor = System.Drawing.Color.SaddleBrown;
             this.lbl_betraghaben.Location = new System.Drawing.Point(231, 538);
             this.lbl_betraghaben.Name = "lbl_betraghaben";
             this.lbl_betraghaben.Size = new System.Drawing.Size(121, 20);
             this.lbl_betraghaben.TabIndex = 8;
             this.lbl_betraghaben.Text = "Betrag Haben";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Maroon;
+            this.label4.Location = new System.Drawing.Point(750, 59);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(577, 15);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Sie können auch den Dateinamen auswählen und die Eingabetaste drücken, um die Dat" +
+    "en neu zu laden";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1339, 571);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.lbl_betraghaben);
             this.Controls.Add(this.lbl_betragSoll);
             this.Controls.Add(this.label3);
@@ -138,6 +154,7 @@ namespace Hesolvis_Aufgabe
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.btn_ImportCSV);
+            this.KeyPreview = true;
             this.Name = "MainWindow";
             this.Text = "MainWindow Hesolvis";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -157,6 +174,7 @@ namespace Hesolvis_Aufgabe
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lbl_betragSoll;
         private System.Windows.Forms.Label lbl_betraghaben;
+        private System.Windows.Forms.Label label4;
     }
 }
 
