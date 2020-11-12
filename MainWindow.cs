@@ -15,12 +15,15 @@ using System.Windows.Forms;
 namespace Hesolvis_Aufgabe
 {
     public partial class MainWindow : Form
-    {
+    {   
+        // Global variable declarations
                 
         private static readonly CultureInfo cultureInfo  = CultureInfo.GetCultureInfo("de-DE");
-
+        
         private static char[] headerDelimiter = {'\t'};
         private static string rowDelimiter = "\t\r\n";
+
+        long count;
 
         // Initialize
         public MainWindow()
@@ -62,8 +65,8 @@ namespace Hesolvis_Aufgabe
                 // Create stream reader
                 StreamReader sr = new StreamReader(strFilePath);
 
-                long count = CountLinesInFile(strFilePath);
-                MessageBox.Show("Anzahl CSV Datei Gesamtzeilen: " + count.ToString());
+                count = CountLinesInFile(strFilePath);
+                
 
                 string line = sr.ReadLine();
                 string[] value = line.Split('\t');
@@ -131,10 +134,16 @@ namespace Hesolvis_Aufgabe
                     }
 
                 }
-                    // Display the summed results in label.
 
-                    lbl_betragSoll.Text = ((char)0x20AC).ToString() + resultValueSoll.ToString(cultureInfo);
-                    lbl_betraghaben.Text = ((char)0x20AC).ToString() + resultValueHaben.ToString(cultureInfo);
+                // Display the summed results in label.
+
+                lbl_betragSoll.Text = ((char)0x20AC).ToString() + resultValueSoll.ToString(cultureInfo);
+
+                lbl_betraghaben.Text = ((char)0x20AC).ToString() + resultValueHaben.ToString(cultureInfo);
+
+                string message = "Summe der Spalten Betrag Soll: " + lbl_betragSoll.Text + "\n" + "Summe der Spalten Betrag Haben: " + lbl_betraghaben.Text + "\n" + "Anzahl CSV Datei Gesamtzeilen: " + count.ToString();
+
+                MessageBox.Show(message, "Ausgabe");
             }
 
             catch (Exception ex)
